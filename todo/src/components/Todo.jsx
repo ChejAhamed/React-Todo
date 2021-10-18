@@ -1,33 +1,52 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { TiEdit } from 'react-icons/ti';
-// eslint-disable-next-line no-unused-vars
 import TodoForm from './TodoForm';
 
-function Todo({ todos, completeTodo, removeTodo }) {
-  // eslint-disable-next-line no-unused-vars
+const Todo = ({
+  todos, completeTodo, removeTodo, updateTodo
+}) => {
   const [edit, setEdit] = useState({
     id: null,
     value: ''
   });
-  return todos.map((todo, index) => (
-    <>
-      <div
-        className={todo.isComplete ? 'todo-row complete' : 'todo-row'}
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-      >
-        <div key={todo.id} onClick={() => completeTodo(todo.id)}>{todo.text}</div>
 
+  const submitUpdate = (value) => {
+    updateTodo(edit.id, value);
+    setEdit({
+      id: null,
+      value: ''
+    });
+  };
+
+  if (edit.id) {
+    return <TodoForm edit={edit} onSubmit={submitUpdate} />;
+  }
+
+  return todos.map((todo, index) => (
+    <div
+      className={todo.isComplete ? 'todo-row complete' : 'todo-row'}
+      key={index}
+    >
+      <div key={todo.id} onClick={() => completeTodo(todo.id)}>
+        {todo.text}
       </div>
       <div className="icons">
-        <RiCloseCircleLine onClick={() => removeTodo(todo.id)} className="delete-icon" />
-        <TiEdit onClick={() => setEdit({ id: todo.id, value: todo.text })} className="edit-icon" />
+        <RiCloseCircleLine
+          onClick={() => removeTodo(todo.id)}
+          className="delete-icon"
+        />
+        <TiEdit
+          onClick={() => setEdit({ id: todo.id, value: todo.text })}
+          className="edit-icon"
+        />
       </div>
-    </>
+    </div>
   ));
-}
+};
 
 export default Todo;
