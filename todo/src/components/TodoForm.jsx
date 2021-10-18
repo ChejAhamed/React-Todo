@@ -1,19 +1,25 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function TodoForm(props) {
   // eslint-disable-next-line no-unused-vars
   const [input, setInput] = useState('');
-  const handleChange = (event) => {
-    setInput(event.target.value);
+
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  });
+  const handleChange = (e) => {
+    setInput(e.target.value);
   };
-  const handleSubmit = (event) => {
-    event.preventDeault();
+  const handleSubmit = (e) => {
+    e.preventDeault();
     props.onSubmit({
       id: Math.floor(Math.random() * 10000),
       text: input
     });
     setInput('');
+    console.log(input);
   };
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
@@ -24,6 +30,7 @@ function TodoForm(props) {
         name="text"
         className="todo-input"
         onChange={handleChange}
+        ref={inputRef}
       />
       <button type="button" className="todo-button">Add todo</button>
     </form>
